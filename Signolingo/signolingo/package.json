@@ -1,0 +1,48 @@
+{
+  "name": "signolingo",
+  "productName": "Signolingo",
+  "version": "1.0.0",
+  "description": "Learn sign language with your camera – Duolingo-style desktop app",
+  "author": "P V Giridhar",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist:win": "electron-builder --win nsis --x64",
+    "dist:mac": "electron-builder --mac",
+    "dist:linux": "electron-builder --linux AppImage"
+  },
+  "build": {
+    "appId": "com.signolingo.app",
+    "productName": "Signolingo",
+    "files": [
+      "main.js",
+      "src/**/*",
+      "build/icon.png",
+      "!src/vendor/hands/hand_landmark_lite.tflite",
+      "!src/vendor/hands/README.md",
+      "!src/vendor/hands/index.d.ts"
+    ],
+    "win": {
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "category": "public.app-category.education",
+      "icon": "build/icon.png"
+    },
+    "linux": {
+      "category": "Education",
+      "icon": "build/icon.png"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.7.0",
+    "electron-builder": "^26.15.3"
+  }
+}

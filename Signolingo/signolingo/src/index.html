@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Signolingo – Learn Sign Language</title>
+<link href="fonts/fonts.css" rel="stylesheet">
+<script src="vendor/hands/hands.js"></script>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fff;--tx:#3c3c3c;--mu:#777;--bd:#e5e5e5;--soft:#f7f7f7;--g:#58cc02;--gd:#58a700;--b:#1cb0f6;--bdk:#1899d6;--r:#ff4b4b;--rd:#ea2b2b;--y:#ffc800;--yd:#e5b400;--p:#ce82ff;--gl:#d7ffb8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#131f24;--tx:#f1f7fb;--mu:#8fa3ad;--bd:#37464f;--soft:#1b2a31;--gl:#27420f}}
+:root[data-theme="dark"]{--bg:#131f24;--tx:#f1f7fb;--mu:#8fa3ad;--bd:#37464f;--soft:#1b2a31;--gl:#27420f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Nunito,system-ui,"Segoe UI",sans-serif;font-weight:700}
+.app{display:grid;grid-template-columns:230px 1fr 320px;max-width:1180px;margin:0 auto;min-height:100vh}
+.side{padding:20px 14px;border-right:2px solid var(--bd);position:sticky;top:0;height:100vh}
+.logo{font-size:28px;font-weight:900;color:var(--g);margin:0 8px 22px}
+.side button.nv{display:flex;gap:14px;align-items:center;width:100%;text-align:left;background:none;border:2px solid transparent;border-radius:14px;padding:12px;margin-bottom:4px;font:inherit;font-weight:800;letter-spacing:.5px;color:var(--mu);cursor:pointer;text-transform:uppercase;font-size:14px}
+.side button.nv.on{background:rgba(28,176,246,.12);border-color:var(--b);color:var(--b)}
+.main{padding:24px 28px 90px}.right{padding:24px 16px}
+.bt{font:inherit;font-weight:800;text-transform:uppercase;letter-spacing:.8px;border:0;border-radius:16px;padding:13px 22px;cursor:pointer;color:#fff;background:var(--g);box-shadow:0 4px 0 var(--gd)}
+.bt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--gd)}.bt.blue{background:var(--b);box-shadow:0 4px 0 var(--bdk)}
+.bt.out{background:var(--bg);color:var(--b);border:2px solid var(--bd);box-shadow:0 4px 0 var(--bd)}.bt:disabled{background:var(--bd);box-shadow:none;color:var(--mu)}
+.bt.red{background:var(--r);box-shadow:0 4px 0 var(--rd)}
+.card{border:2px solid var(--bd);border-radius:18px;padding:16px;margin-bottom:16px;background:var(--bg)}
+.stats{display:flex;gap:16px;justify-content:space-between;margin-bottom:16px}.st{font-size:17px;font-weight:900}
+.banner{border-radius:18px;padding:18px 22px;color:#fff;background:var(--g);display:flex;justify-content:space-between;align-items:center;margin-bottom:26px;gap:12px}
+.banner h2{margin:0;font-size:22px}.banner p{margin:4px 0 0;opacity:.9}
+.path{display:flex;flex-direction:column;align-items:center;gap:18px;margin-bottom:30px}
+.node{width:76px;height:70px;border-radius:50%;border:0;font-size:30px;cursor:pointer;background:var(--g);box-shadow:0 7px 0 var(--gd);color:#fff}
+.node.done{background:var(--y);box-shadow:0 7px 0 var(--yd)}.node.lock{background:var(--bd);box-shadow:0 7px 0 #c9c9c9;cursor:not-allowed}
+.node:active:not(.lock){transform:translateY(5px);box-shadow:0 2px 0 var(--gd)}
+.nlabel{font-size:12px;color:var(--mu);text-align:center;margin-top:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.sc{border:2px solid var(--bd);border-radius:16px;padding:14px;text-align:center;cursor:pointer;background:var(--bg)}.sc:hover{border-color:var(--b)}.sc .e{font-size:44px}
+.sc small{display:block;color:var(--mu);font-weight:600;margin-top:4px}
+h1{margin:0 0 16px;font-size:26px}h3{margin:0 0 8px}.mu{color:var(--mu);font-weight:600}
+.prog{height:16px;background:var(--bd);border-radius:10px;overflow:hidden;flex:1}.prog i{display:block;height:100%;width:0;background:var(--g);border-radius:10px;transition:width .4s}
+.bar2{height:12px;background:var(--bd);border-radius:8px;overflow:hidden}.bar2 i{display:block;height:100%;background:var(--y);width:0}
+/* lesson */
+#lesson{position:fixed;inset:0;background:var(--bg);z-index:10;display:none;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+#lesson.on{display:flex}.ltop{display:flex;gap:14px;align-items:center;max-width:980px;width:100%;margin:0 auto;padding:16px}
+.xbtn{background:none;border:0;font-size:26px;color:var(--mu);cursor:pointer}
+.lbody{flex:1;overflow:auto;max-width:980px;width:100%;margin:0 auto;padding:8px 16px}
+.lg{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.vid{position:relative;border-radius:18px;overflow:hidden;background:#101c22;aspect-ratio:4/3;border:2px solid var(--bd)}
+.vid video,.vid canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.camov{position:absolute;inset:0;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;background:rgba(16,28,34,.9);color:#fff;text-align:center;padding:16px}
+.big{font-size:100px;text-align:center;line-height:1.1}.tgt{text-align:center;font-size:26px;font-weight:900}
+.hold{height:14px;background:var(--bd);border-radius:8px;overflow:hidden;margin-top:12px}.hold i{display:block;height:100%;width:0;background:var(--g)}
+.demo{width:100%;max-height:150px;border-radius:12px;margin-top:8px;background:#000}
+.lfoot{border-top:2px solid var(--bd);padding:16px;transition:background .2s}
+.lfi{max-width:980px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.lfoot.good{background:var(--gl);color:var(--gd)}.lfoot.bad{background:rgba(255,75,75,.15);color:var(--rd)}
+.lfoot .m{font-size:20px;font-weight:900}
+.tb{display:grid;grid-template-columns:repeat(auto-fit,minmax(40px,1fr))}
+table{width:100%;border-collapse:collapse}td,th{padding:10px 8px;border-bottom:2px solid var(--bd);text-align:left}
+input[type=text]{font:inherit;padding:12px;border:2px solid var(--bd);border-radius:12px;background:var(--soft);color:var(--tx)}
+button:focus-visible,input:focus-visible{outline:3px solid var(--b);outline-offset:2px}
+.hide{display:none!important}.ok{color:var(--g)}.badt{color:var(--r)}
+.ring{--p:0;width:110px;height:110px;border-radius:50%;background:conic-gradient(var(--g) calc(var(--p)*1%),var(--bd) 0);display:grid;place-items:center;margin:8px auto}
+.ring b{width:84px;height:84px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-size:20px}
+.cs{background:var(--soft);border-radius:12px;padding:10px;font-size:14px;margin-top:8px}
+@media(max-width:1000px){.app{grid-template-columns:70px 1fr}.right{display:none}.side .lab,.logo span{display:none}.logo{font-size:22px;text-align:center}}
+@media(max-width:700px){.app{grid-template-columns:1fr}.side{position:fixed;bottom:0;left:0;right:0;top:auto;height:auto;display:flex;z-index:5;background:var(--bg);border-right:0;border-top:2px solid var(--bd);padding:6px}
+.side .logo{display:none}.side button.nv{justify-content:center;padding:8px}.main{padding:16px 14px 90px}.lg{grid-template-columns:1fr}}
+@keyframes pl{50%{transform:scale(1.1)}}.node.cur{animation:pl 1s infinite;box-shadow:0 7px 0 var(--gd),0 0 0 8px rgba(88,204,2,.35)}.bt.pulse{animation:pl .8s infinite;background:var(--y);color:#3c3c3c;box-shadow:0 4px 0 var(--yd),0 0 0 6px rgba(255,200,0,.5)}#chk{min-width:160px;font-size:18px;padding:15px 32px}#chk:not(.pulse):not(:disabled){box-shadow:0 4px 0 var(--gd),0 0 0 5px rgba(88,204,2,.4)}.vid.okb{border-color:var(--g);box-shadow:0 0 0 6px rgba(88,204,2,.55)}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}.bt.pulse{animation:none}}
+</style></head><body>
+<div class="app">
+<aside class="side"><div class="logo">🤟<span> signolingo</span></div>
+<button class="nv on" data-v="learn">🏠<span class="lab">Learn</span></button>
+<button class="nv" data-v="practice">🎯<span class="lab">Practice</span></button>
+<button class="nv" data-v="dict">📖<span class="lab">Dictionary</span></button>
+<button class="nv" data-v="quests">🏆<span class="lab">Quests</span></button>
+<button class="nv" data-v="board">🥇<span class="lab">Leaderboard</span></button>
+<button class="nv" data-v="profile">👤<span class="lab">Profile</span></button></aside>
+
+<main class="main">
+ <section id="v-learn"></section><section id="v-practice" class="hide"></section><section id="v-dict" class="hide"></section>
+ <section id="v-quests" class="hide"></section><section id="v-board" class="hide"></section><section id="v-profile" class="hide"></section>
+</main>
+
+<aside class="right">
+ <div class="stats"><span class="st" id="sS"></span><span class="st" id="sX"></span><span class="st" id="sH"></span></div>
+ <div class="card"><h3>Level <span id="lv"></span></h3><div class="bar2"><i id="lb"></i></div><p class="mu" id="lt" style="margin:6px 0 0"></p></div>
+ <div class="card"><h3>Daily goal</h3><div class="ring" id="ring"><b id="rt"></b></div><p class="mu" id="dn" style="text-align:center;margin:0"></p></div>
+ <div class="card"><h3>📷 Camera</h3><p class="mu" id="cst" style="margin:0 0 10px">Not enabled yet.</p><button class="bt blue" id="camTest" style="width:100%">Enable camera</button></div>
+</aside></div>
+
+<div id="lesson"><div class="ltop"><button class="xbtn" id="quit" aria-label="Quit lesson">✕</button><div class="prog"><i id="lp"></i></div><span class="st" id="lh"></span></div>
+<div class="lbody"><div class="lg">
+ <div><div class="tgt" id="tgt"></div><div class="big" id="emo"></div><p class="mu" id="how" style="text-align:center;min-height:44px"></p>
+  <video id="demo" class="demo hide" controls playsinline></video>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px">
+   <button class="bt out" id="hintBtn">Hide hint</button>
+   <label class="bt out" style="cursor:pointer">🎬 Demo video<input id="vf" type="file" accept="video/*" hidden></label></div></div>
+ <div><div class="vid" id="vbox"><video id="v" playsinline muted autoplay></video><canvas id="c"></canvas><div id="okov" class="hide" style="position:absolute;left:0;right:0;bottom:0;background:var(--g);color:#fff;text-align:center;padding:10px;font-weight:900;font-size:18px">✔ Sign detected! Press CHECK</div><div id="hud" style="position:absolute;left:8px;top:8px;background:rgba(0,0,0,.6);color:#fff;border-radius:10px;padding:4px 10px;font-size:13px"></div>
+  <div class="camov" id="camov"><div style="font-size:42px">📷</div><div id="camt">Signolingo needs your camera to check your signs.</div>
+  <button class="bt" id="camBtn">Turn on camera</button><button class="bt out hide" id="manBtn">Continue without camera</button></div></div>
+  <div class="hold"><i id="hold"></i></div><div class="mu" id="msg" aria-live="polite" style="text-align:center;margin-top:8px;min-height:24px"></div>
+  <div style="text-align:center;margin-top:6px"><button class="bt out" id="teach" style="padding:8px 14px;font-size:12px">🧠 Teach app my sign</button></div></div>
+</div></div>
+<div class="lfoot" id="lf"><div class="lfi"><button class="bt out" id="skip">Skip (−1 ❤️)</button><span class="m" id="fm"></span><button class="bt" id="chk" disabled>Check</button></div></div></div>
+
+<script>
+const S=[
+{id:'A',u:0,k:'s',t:'Letter A',e:'✊',how:'Fist with thumb along the side.',p:[0,0,0,0,0]},
+{id:'B',u:0,k:'s',t:'Letter B',e:'🖐️',how:'Four fingers up together, thumb across palm.',p:[0,1,1,1,1]},
+{id:'D',u:0,k:'s',t:'Letter D',e:'☝️',how:'Index up, others curled.',p:[null,1,0,0,0]},
+{id:'I',u:0,k:'s',t:'Letter I',e:'🤙',how:'Fist with little finger up.',p:[0,0,0,0,1]},
+{id:'L',u:0,k:'s',t:'Letter L',e:'👆👍',how:'Index up, thumb out: an L.',p:[1,1,0,0,0]},
+{id:'V',u:0,k:'s',t:'Letter V',e:'✌️',how:'Index and middle up in a V.',p:[null,1,1,0,0]},
+{id:'W',u:0,k:'s',t:'Letter W',e:'🖖',how:'Index, middle, ring up and spread.',p:[null,1,1,1,0]},
+{id:'Y',u:0,k:'s',t:'Letter Y',e:'🤙',how:'Thumb and little finger out.',p:[1,0,0,0,1]},
+{id:'LOVE',u:1,k:'s',t:'I LOVE YOU',e:'🤟',how:'Thumb, index and little finger out.',p:[1,1,0,0,1]},
+{id:'GOOD',u:1,k:'s',t:'GOOD',e:'👍',how:'Fist with thumb pointing up.',p:[1,0,0,0,0]},
+{id:'ONE',u:1,k:'s',t:'NUMBER 1',e:'☝️',how:'Index finger up, thumb folded.',p:[0,1,0,0,0]},
+{id:'FIVE',u:1,k:'s',t:'NUMBER 5',e:'✋',how:'Open hand, all fingers spread.',p:[1,1,1,1,1]},
+{id:'NAMASTE',u:2,k:'d',t:'NAMASTE (ISL)',e:'🙏',how:'Both palms together, fingers up.',p:[1,1,1,1,1],r:[0,.9]},
+{id:'BOOK',u:2,k:'d',t:'BOOK (ISL)',e:'📖',how:'Both open palms side by side.',p:[1,1,1,1,1],r:[.9,2.6]},
+{id:'TOGETHER',u:2,k:'d',t:'TOGETHER',e:'🤜🤛',how:'Bring both fists together.',p:[0,0,0,0,0],r:[0,2.2]},
+{id:'WAVE',u:3,k:'m',t:'HELLO (wave)',e:'👋',how:'Open hand, wave side to side.',p:[1,1,1,1,1]},
+{id:'THANKS',u:3,k:'m',t:'THANK YOU',e:'🙏',how:'Flat open hand, sweep it clearly downward.',p:[1,1,1,1,1]},
+{id:'PLEASE',u:3,k:'m',t:'PLEASE',e:'🔄',how:'Open hand, draw a circle in the air.',p:[1,1,1,1,1]},
+{id:'SORRY',u:3,k:'m',t:'SORRY',e:'😔',how:'Fist, draw a circle in the air.',p:[0,0,0,0,0]},
+{id:'YES',u:3,k:'m',t:'YES',e:'✊',how:'Fist nodding up and down.',p:[0,0,0,0,0]}];
+const U=[['Unit 1','Fingerspelling','Learn ASL letters','#58cc02'],['Unit 2','Everyday signs','Love, good, numbers','#1cb0f6'],['Unit 3','Two-hand signs','Namaste, Book (ISL)','#ce82ff'],['Unit 4','Motion signs','Wave, Thank you, Yes, Please, Sorry','#ff9600']];
+const T=()=>new Date().toISOString().slice(0,10);
+let st={xp:0,streak:0,hearts:5,best:0,goal:50,day:'',dxp:0,dstreak:0,name:'Learner',log:[],samples:{},done:{},q:{les:0,str:0}};
+try{Object.assign(st,JSON.parse(localStorage.getItem('sgl')||'{}'))}catch(e){}
+if(st.day!==T()){if(st.day&&st.dxp<st.goal)st.dstreak=0;st.day=T();st.dxp=0;st.q={les:0,str:0}}
+const $=i=>document.getElementById(i),save=()=>{try{localStorage.setItem('sgl',JSON.stringify(st))}catch(e){}};
+function hud(){$('sS').textContent='🔥 '+st.dstreak;$('sX').textContent='💎 '+st.xp;$('sH').textContent='❤️ '+st.hearts;$('lv').textContent=Math.floor(st.xp/100)+1;
+ $('lb').style.width=st.xp%100+'%';$('lt').textContent=100-st.xp%100+' XP to next level';const p=Math.min(100,Math.round(st.dxp/st.goal*100));
+ $('ring').style.setProperty('--p',p);$('rt').textContent=p+'%';$('dn').textContent=st.dxp+' / '+st.goal+' XP today';$('lh').textContent='❤️ '+st.hearts}
+/* nodes: each unit split into lessons of 3 */
+const nodes=[];U.forEach((u,ui)=>{const l=S.filter(s=>s.u==ui);for(let i=0;i<l.length;i+=3)nodes.push({id:ui+'-'+i,u:ui,signs:l.slice(i,i+3)})});
+function view(v){document.querySelectorAll('main section').forEach(s=>s.classList.add('hide'));$('v-'+v).classList.remove('hide');
+ document.querySelectorAll('.nv').forEach(b=>b.classList.toggle('on',b.dataset.v==v));({learn,practice,dict,quests,board,profile})[v]();hud()}
+document.querySelectorAll('.nv').forEach(b=>b.onclick=()=>view(b.dataset.v));
+function learn(){let h='<h1>Learn</h1>',prev=true,nx=0;
+ U.forEach((u,ui)=>{h+='<div class="banner" style="background:'+u[3]+'"><div><h2>'+u[1]+'</h2><p>'+u[0]+' · '+u[2]+'</p></div></div><div class="path">';
+  nodes.filter(n=>n.u==ui).forEach((n,i)=>{const d=st.done[n.id],lock=!prev&&!d,cur=!d&&!lock&&!nx&&(nx=1),off=[0,40,0,-40][i%4];
+   h+='<div style="transform:translateX('+off+'px);text-align:center"><button class="node '+(d?'done':lock?'lock':cur?'cur':'')+'" '+(lock?'disabled':'')+' data-n="'+n.id+'">'+(d?'⭐':lock?'🔒':n.signs[0].e.slice(0,2))+'</button><div class="nlabel">'+n.signs.map(s=>s.id).join(' · ')+'</div></div>';prev=!!d});
+  h+='</div>'});$('v-learn').innerHTML=h;
+ const cn=document.querySelector('.node.cur');if(cn)setTimeout(()=>cn.scrollIntoView({block:'center',behavior:'smooth'}),60);
+ document.querySelectorAll('.node').forEach(b=>b.onclick=()=>begin(nodes.find(n=>n.id==b.dataset.n).signs,b.dataset.n))}
+function practice(){$('v-practice').innerHTML='<h1>Practice</h1><div class="grid"><div class="sc" id="p1"><div class="e">🔀</div>Mixed practice<small>8 random signs</small></div><div class="sc" id="p2"><div class="e">🙈</div>No-hint challenge<small>Hints hidden, bonus XP</small></div><div class="sc" id="p3"><div class="e">🙌</div>Two-hand drill<small>ISL two-hand signs</small></div><div class="sc" id="p4"><div class="e">🌊</div>Motion drill<small>Movement signs</small></div></div>';
+ const pick=f=>S.filter(f).sort(()=>Math.random()-.5).slice(0,8);
+ $('p1').onclick=()=>begin(pick(()=>1));$('p2').onclick=()=>begin(pick(()=>1),null,1);$('p3').onclick=()=>begin(pick(s=>s.k=='d'));$('p4').onclick=()=>begin(pick(s=>s.k=='m'))}
+function dict(){$('v-dict').innerHTML='<h1>Sign dictionary</h1><p class="mu">All signs in Signolingo. Tap a card to practise that sign.</p><div class="grid">'+S.map(s=>'<div class="sc" data-i="'+s.id+'"><div class="e">'+s.e+'</div>'+s.t+'<small>'+s.how+'</small></div>').join('')+'</div>';
+ document.querySelectorAll('#v-dict .sc').forEach(c=>c.onclick=()=>begin([S.find(s=>s.id==c.dataset.i)]))}
+function quests(){const q=[['Earn '+st.goal+' XP',st.dxp,st.goal],['Finish 2 lessons',st.q.les,2],['Reach a streak of 5 signs',st.q.str,5],['Teach the app a sign',Object.keys(st.samples).length?1:0,1]];
+ $('v-quests').innerHTML='<h1>Daily quests</h1>'+q.map(x=>'<div class="card"><h3>'+x[0]+'</h3><div class="bar2"><i style="width:'+Math.min(100,x[1]/x[2]*100)+'%;background:var(--g)"></i></div><p class="mu" style="margin:6px 0 0">'+Math.min(x[1],x[2])+' / '+x[2]+(x[1]>=x[2]?' ✅':'')+'</p></div>').join('')}
+function board(){$('v-board').innerHTML='<h1>Leaderboard</h1><div class="card"><table><tr><th>#</th><th>Name</th><th>XP</th><th>Date</th></tr>'+(st.log.length?st.log.slice(0,10).map((x,i)=>'<tr><td>'+['🥇','🥈','🥉'][i]||i+1+'</td><td>'+x.n.replace(/</g,'')+'</td><td>'+x.xp+'</td><td>'+x.d+'</td></tr>').join(''):'<tr><td colspan=4>Finish a lesson to appear here.</td></tr>')+'</table></div><p class="mu">Best lessons on this device. A shared online board needs a server.</p>'}
+function profile(){$('v-profile').innerHTML='<h1>Profile & settings</h1><div class="card"><h3>Name</h3><input type="text" id="nm" value="'+st.name.replace(/"/g,'')+'" maxlength="16"> <button class="bt" id="sv">Save</button></div><div class="card"><h3>Daily goal</h3><button class="bt out" data-g="30">Casual 30</button> <button class="bt out" data-g="50">Regular 50</button> <button class="bt out" data-g="100">Serious 100</button></div><div class="card"><h3>Your trained model</h3><p class="mu">'+(Object.keys(st.samples).length+' signs personalised from your samples.')+'</p><button class="bt red" id="clr">Reset samples</button></div><div class="card"><h3>Stats</h3><p class="mu">Total XP '+st.xp+' · best streak '+st.best+' · lessons done '+Object.keys(st.done).length+'</p></div>';
+ $('sv').onclick=()=>{st.name=$('nm').value||'Learner';save()};document.querySelectorAll('[data-g]').forEach(b=>b.onclick=()=>{st.goal=+b.dataset.g;save();hud()});$('clr').onclick=()=>{st.samples={};save();profile()}}
+
+/* camera + detector: MediaPipe Tasks Vision (GPU, video mode) */
+let stream=null,lm=null,ready=false,run=false,man=false,lastT=-1,fpsN=0,fpsT=performance.now(),fps=0;const v=$('v'),cv=$('c'),cx=cv.getContext('2d');
+async function loadModel(){if(lm)return lm;
+ const h=new Hands({locateFile:f=>'vendor/hands/'+f});
+ h.setOptions({maxNumHands:2,modelComplexity:1,minDetectionConfidence:.5,minTrackingConfidence:.5,selfieMode:false});
+ let pend=null;h.onResults(r=>{if(pend){const p=pend;pend=null;p(r)}});
+ await h.initialize();
+ lm={detectForVideo:vid=>new Promise((ok,no)=>{pend=ok;h.send({image:vid}).catch(no)}).then(r=>({landmarks:r.multiHandLandmarks||[]}))};
+ return lm}
+async function startCam(){
+ if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return camErr('Camera access is not available. Check that a camera is connected.');
+ try{stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user',width:{ideal:640},height:{ideal:480},frameRate:{ideal:30}},audio:false});v.srcObject=stream;await v.play()}
+ catch(e){const n=e.name;return camErr(n=='NotAllowedError'?'Camera blocked by Windows. Open Settings > Privacy & security > Camera and turn on Let desktop apps access your camera, then try again.':n=='NotFoundError'?'No camera found. Plug one in and try again.':n=='NotReadableError'?'Your camera is used by another app. Close it and retry.':'Could not start the camera ('+n+').')}
+ $('camov').classList.add('hide');$('cst').textContent='✅ Camera on';$('camTest').textContent='Camera ready';man=false;
+ $('msg').textContent='Loading fast hand detector…';
+ try{await loadModel();run=true;frame()}catch(e){enMan('Hand detector could not load.')}}
+function camErr(m){$('camt').textContent=m;$('camBtn').textContent='Try again';$('manBtn').classList.remove('hide');$('camov').classList.remove('hide');$('cst').textContent='⚠️ Camera unavailable'}
+function enMan(m){man=true;$('msg').textContent=m+' Practice mode: copy the sign and press Check.';$('chk').disabled=false}
+let busy=false;
+async function frame(){if(!run)return;
+ if(!busy&&v.readyState>=2&&v.currentTime!==lastT){busy=true;lastT=v.currentTime;const ts=performance.now();
+  try{const r=await lm.detectForVideo(v,ts);if(run)res(r,ts)}catch(e){console.error(e);$('hud').textContent='⚠ '+e.message}
+  busy=false;fpsN++;if(ts-fpsT>1000){fps=fpsN;fpsN=0;fpsT=ts}}
+ if(run){if(v.requestVideoFrameCallback)v.requestVideoFrameCallback(frame);else requestAnimationFrame(frame)}}
+$('camBtn').onclick=startCam;$('camTest').onclick=()=>{if(!stream)startCam()};
+$('manBtn').onclick=()=>{man=true;$('camov').classList.add('hide');enMan('No camera.')};
+function stopCam(){run=false;ready=false;if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}$('camov').classList.remove('hide');$('cst').textContent='Not enabled yet.';$('camTest').textContent='Enable camera'}
+
+/* lesson */
+let nowOk=false,lastGuess='',detected=false,q=[],qi=0,cur=null,hintOn=true,holdT=0,locked=false,correct=0,gained=0,hist=[],rec=0,nodeId=null,nohint=false;
+function begin(list,nid,nh){q=list;qi=0;correct=0;gained=0;nodeId=nid||null;nohint=!!nh;if(st.hearts<=0){st.hearts=5;save()}$('lesson').classList.add('on');next();hud();if(!stream&&!man)startCam()}
+function next(){if(qi>=q.length)return finish();cur=q[qi];hintOn=!nohint;holdT=0;locked=false;hist=[];
+ detected=false;$('chk').classList.remove('pulse');$('chk').textContent='Check';$('okov').classList.add('hide');$('vbox').classList.remove('okb');$('lf').className='lfoot';$('fm').textContent='';$('tgt').textContent='Show this sign: '+cur.t;$('emo').textContent=cur.e;$('how').textContent=cur.how+(cur.k=='d'?' (use both hands)':cur.k=='m'?' (movement)':'');
+ const sh=hintOn;$('emo').style.visibility=$('how').style.visibility=sh?'visible':'hidden';$('hintBtn').textContent=sh?'Hide hint':'Show hint';
+ $('demo').classList.toggle('hide',!cur.vid);if(cur.vid)$('demo').src=cur.vid;$('lp').style.width=qi/q.length*100+'%';setHold(0);$('chk').disabled=false;$('msg').textContent=ready?'Show your sign to the camera…':$('msg').textContent}
+$('hintBtn').onclick=()=>{hintOn=!hintOn;$('emo').style.visibility=$('how').style.visibility=hintOn?'visible':'hidden';$('hintBtn').textContent=hintOn?'Hide hint':'Show hint'};
+$('vf').onchange=e=>{const f=e.target.files[0];if(f&&cur){cur.vid=URL.createObjectURL(f);$('demo').src=cur.vid;$('demo').classList.remove('hide')}};
+$('skip').onclick=()=>{st.hearts=Math.max(0,st.hearts-1);st.q.str=0;save();hud();qi++;st.hearts<=0?finish(1):next()};
+const chkGo=()=>{if(locked)return;if(man||detected||nowOk)success();else{$('lf').className='lfoot bad';$('fm').textContent=!ready?'Camera is still starting…':lastGuess?'That looks like '+lastGuess+'. Try '+cur.t+' again':'Show your sign to the camera, then press Check';setTimeout(()=>{if(!detected&&!locked)$('lf').className='lfoot'},1500)}};document.addEventListener('keydown',e=>{if(e.key=='Enter'&&$('lesson').classList.contains('on')){e.preventDefault();$('chk').click()}});$('chk').onclick=chkGo;$('quit').onclick=()=>{stopCam();$('lesson').classList.remove('on');view('learn')};
+function success(){if(locked)return;locked=true;correct++;st.streak++;st.q.str++;st.best=Math.max(st.best,st.streak);const g=10+(hintOn?0:5)+Math.min(st.streak,5);st.xp+=g;gained+=g;
+ const was=st.dxp>=st.goal;st.dxp+=g;if(!was&&st.dxp>=st.goal)st.dstreak++;save();hud();beep(880);
+ $('chk').classList.remove('pulse');$('okov').classList.add('hide');$('lf').className='lfoot good';$('fm').textContent='✔ Nicely done! +'+g+' XP';$('chk').disabled=false;$('chk').textContent='Continue';$('chk').onclick=adv;setTimeout(()=>{if(locked&&$('lesson').classList.contains('on'))adv()},1400)}
+function adv(){if(!locked)return;$('chk').textContent='Check';$('chk').onclick=chkGo;qi++;next()}
+function finish(out){$('lesson').classList.remove('on');if(!out&&nodeId)st.done[nodeId]=1;if(!out)st.q.les++;
+ if(gained){st.log.push({n:st.name,xp:gained,d:T()});st.log=st.log.sort((a,b)=>b.xp-a.xp).slice(0,20)}save();stopCam();view('learn');
+ setTimeout(()=>alert((out?'Out of hearts! They refill next time.\n':'Lesson complete! 🎉\n')+correct+'/'+q.length+' correct · +'+gained+' XP'+(!out&&nodeId&&nodes.some(n=>!st.done[n.id])?'\n🔓 Next level unlocked!':'')),50)}
+function beep(f){try{const a=new(window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.frequency.value=f;g.gain.value=.08;o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+.15)}catch(e){}}
+
+/* detection: smoothed landmarks, joint-angle finger states, motion trails */
+const CN=[[0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[5,9],[9,10],[10,11],[11,12],[9,13],[13,14],[14,15],[15,16],[13,17],[17,18],[18,19],[19,20],[0,17]];
+const D=(l,a,b)=>Math.hypot(l[a].x-l[b].x,l[a].y-l[b].y);
+const ang=(l,a,b,c)=>{const u=[l[a].x-l[b].x,l[a].y-l[b].y,l[a].z-l[b].z],w=[l[c].x-l[b].x,l[c].y-l[b].y,l[c].z-l[b].z];return Math.acos(Math.max(-1,Math.min(1,(u[0]*w[0]+u[1]*w[1]+u[2]*w[2])/((Math.hypot(...u)*Math.hypot(...w))||1))))*57.3};
+function fingers(l,pv){const p=D(l,0,9)||1,o=D(l,4,5)/p,t=ang(l,2,3,4),f=[t>150&&o>.45?1:(t<130||o<.35?0:pv?pv[0]:0)];
+ [[5,6,7],[9,10,11],[13,14,15],[17,18,19]].forEach((j,i)=>{const x=ang(l,...j);f.push(x>155?1:x<135?0:pv?pv[i+1]:0)});return f}
+const fm=(f,p)=>p.every((x,i)=>x===null||x===f[i]);
+function vec(l){const p=D(l,0,9)||1,o=[];l.forEach(a=>o.push((a.x-l[0].x)/p,(a.y-l[0].y)/p));return o}
+function knn(id,vv){const a=st.samples[id];if(!a||a.length<5)return false;let m=9;a.forEach(s=>{let d=0;for(let i=0;i<42;i++)d+=Math.abs(s[i]-vv[i]);m=Math.min(m,d/42)});return m<.22}
+function zz(a,amp){let c=0,dir=0,ext=a[0];for(const x of a){if(dir>=0&&x<ext-amp){if(dir)c++;dir=-1;ext=x}else if(dir<=0&&x>ext+amp){if(dir)c++;dir=1;ext=x}else if((dir>0&&x>ext)||(dir<0&&x<ext))ext=x}return c}
+let sm=[],pf=[],trail=[],lastOk=0,hits=0;
+function mot(id){const n=trail.length;if(n<10)return false;const s=trail.reduce((a,b)=>a+b.s,0)/n,xs=trail.map(a=>a.x/s),ys=trail.map(a=>a.y/s);
+ if(id=='WAVE')return zz(xs,.4)>=3;if(id=='YES')return zz(ys,.3)>=2;
+ if(id=='THANKS'){const dy=ys[n-1]-ys[0],dx=Math.abs(xs[n-1]-xs[0]);return dy>1.3&&dy>dx*1.2}
+ const mx=xs.reduce((a,b)=>a+b)/n,my=ys.reduce((a,b)=>a+b)/n;let tot=0,r=0;
+ for(let i=0;i<n;i++){r+=Math.hypot(xs[i]-mx,ys[i]-my);if(i){let d=Math.atan2(ys[i]-my,xs[i]-mx)-Math.atan2(ys[i-1]-my,xs[i-1]-mx);if(d>Math.PI)d-=2*Math.PI;if(d<-Math.PI)d+=2*Math.PI;tot+=d}}
+ return Math.abs(tot)>5&&r/n>.4}
+function lenient(F,s){if(fm(F,s.p))return true;const i=[1,2,3,4].every(k=>s.p[k]===null||s.p[k]===F[k]);return i&&!S.some(o=>o!==s&&o.k=='s'&&fm(F,o.p))}
+function test(L,F){const s=cur,l=L[0];
+ if(s.k=='d'){if(L.length<2)return false;const p=D(l,0,9)||.1,d=Math.hypot(l[9].x-L[1][9].x,l[9].y-L[1][9].y)/p;return fm(F[0],s.p)&&fm(F[1],s.p)&&d>=s.r[0]&&d<=s.r[1]}
+ const shape=(s.k=='s'?lenient(F[0],s):fm(F[0],s.p))||(s.k=='s'&&knn(s.id,vec(l)));if(s.k=='s')return shape;return shape&&mot(s.id)}
+function res(r,ts){
+ if(!ready){ready=true;man=false;$('chk').disabled=false;$('msg').textContent='Show your sign to the camera…'}
+ cv.width=v.videoWidth||640;cv.height=v.videoHeight||480;cx.clearRect(0,0,cv.width,cv.height);
+ nowOk=false;const raw=r.landmarks||[];if(raw.length!=sm.length){sm=[];pf=[]}
+ const L=raw.map((h,k)=>h.map((p,i)=>{const o=sm[k]&&sm[k][i];return o?{x:o.x+.6*(p.x-o.x),y:o.y+.6*(p.y-o.y),z:o.z+.6*(p.z-o.z)}:{x:p.x,y:p.y,z:p.z}}));sm=L;
+ const F=L.map((l,k)=>pf[k]=fingers(l,pf[k]));
+ L.forEach(h=>{cx.strokeStyle='#58cc02';cx.lineWidth=3;CN.forEach(([a,b])=>{cx.beginPath();cx.moveTo(h[a].x*cv.width,h[a].y*cv.height);cx.lineTo(h[b].x*cv.width,h[b].y*cv.height);cx.stroke()});cx.fillStyle='#fff';h.forEach(p=>{cx.beginPath();cx.arc(p.x*cv.width,p.y*cv.height,3.5,0,7);cx.fill()})});
+ if(L[0]){const l=L[0],c=[0,5,9,13,17].reduce((a,i)=>({x:a.x+l[i].x/5,y:a.y+l[i].y/5}),{x:0,y:0});trail.push({t:ts,x:c.x,y:c.y,s:D(l,0,9)||.1});trail=trail.filter(h=>ts-h.t<1500)}else trail=[];
+ if(cur&&cur.k=='m'){cx.strokeStyle='#ffc800';cx.lineWidth=4;cx.beginPath();trail.forEach((h,i)=>{i?cx.lineTo(h.x*cv.width,h.y*cv.height):cx.moveTo(h.x*cv.width,h.y*cv.height)});cx.stroke()}
+ const g=L[0]?S.filter(s=>s.k=='s'&&fm(F[0],s.p)).map(s=>s.t)[0]:null;lastGuess=g||'';$('hud').textContent='⚡ '+fps+' fps · '+(L.length?(g||'hand ✋')+(L.length>1?' ×2':''):'no hand');
+ if(rec&&L[0]&&cur&&cur.k!='m'){(st.samples[cur.id]=st.samples[cur.id]||[]).push(vec(L[0]).map(x=>+x.toFixed(3)));if(--rec==0){save();$('msg').textContent='Learned! Saved to your model.'}return}
+ if(detected)return;
+ if(!L.length||locked||!cur){if(!locked){setHold(0);holdT=0;$('msg').textContent="👋 I can't see your hand yet"}return}
+ const ok=test(L,F);nowOk=ok;
+ if(ok){lastOk=ts;if(!holdT)holdT=ts}else if(ts-lastOk>250)holdT=0;
+ if(holdT){const pr=cur.k=='m'?1:Math.min(1,(ts-holdT)/500);setHold(pr);$('msg').textContent='Looking good'+(pr<1?' — hold it…':'');if(pr>=1&&!detected){trail=[];found()}}
+ else{setHold(0);$('msg').textContent=cur.k=='m'?'Do the movement clearly, keep your hand shape…':'Not quite — check the hint'+(cur.k=='d'&&L.length<2?' (show both hands)':'')}}
+function found(){detected=true;beep(660);$('lf').className='lfoot good';$('fm').textContent='✔ Looks right! Press CHECK (or Enter)';$('chk').disabled=false;$('chk').textContent='CHECK ✔';$('chk').classList.add('pulse');$('okov').classList.remove('hide');$('vbox').classList.add('okb');$('msg').textContent='Sign detected — press Check to confirm'}
+function setHold(p){$('hold').style.width=p*100+'%'}
+$('teach').onclick=()=>{if(!ready)return;if(cur.k=='m'){$('msg').textContent='Teaching works for hand-shape signs. Motion signs use movement rules.';return}rec=25;$('msg').textContent='Hold "'+cur.t+'" steady… recording'};
+view('learn');
+</script></body></html>
