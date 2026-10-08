@@ -201,7 +201,7 @@ Potential future improvements include:
 ##  Developer
 
 **P V Giridhar**
-**Nitishkumar**
+**Nithishkumar**
 **X Arockia Nithesh**
 **T K Vedhavarsan**
 
